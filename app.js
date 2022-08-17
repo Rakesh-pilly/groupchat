@@ -4,7 +4,7 @@ const path = require('path');
 
 const app  = express();
 
-const PROT = process.env.PROT || 5000
+const PORT  = process.env.PORT  || 5000
 
 
 
@@ -14,6 +14,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build', 'index.html'));
 });
 
-app.listen(PROT, ()=> {
-    console.log("this app is listting to ", PROT)
+app.listen(PORT , ()=> {
+    console.log("this app is listting to ", PORT )
 })
