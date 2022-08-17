@@ -1,24 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { useDispatch, useSelector } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+import { authActions } from "./store/auth";
 
 function App() {
+  const {isLogging} = useSelector(state => state.auth)
+  const location = useLocation();
+  const dispatch = useDispatch()
+
+  onAuthStateChanged(auth, (user)=> {
+    if(user){
+      dispatch(authActions.login())
+
+    }else{
+      dispatch(authActions.logout())
+    }
+  })
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/login" element={<Login  />} />
+        <Route path="/signup" element={<Signup />}
+        />
+        <Route
+          path="/"
+          element={
+            isLogging ? (
+              <Home />
+            ) : (
+              <Navigate to="/login" state={{ from: location }} replace />
+            )
+          }
+        />
+      </Routes>
+    </>
   );
 }
 
