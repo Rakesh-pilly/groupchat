@@ -9,9 +9,10 @@ const SignUp = () => {
     userName: "",
     email: "",
     password: "",
+    photoURL: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleInputs = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,18 +22,19 @@ const SignUp = () => {
     if (inputs.userName === "" || inputs.email === "" || inputs.password === "")
       return;
 
-    createUserWithEmailAndPassword(auth, inputs.email, inputs.password).then(
-      (userCredentail) => {
+    createUserWithEmailAndPassword(auth, inputs.email, inputs.password)
+      .then((userCredentail) => {
         const user = userCredentail.user;
-      }
-    ).then(()=> {
-      updateProfile(auth.currentUser, {
-        displayName: inputs.userName
-      }).then(()=> {
-        navigate("/")
       })
-    }).catch((err)=> {
-    })
+      .then(() => {
+        updateProfile(auth.currentUser, {
+          displayName: inputs.userName,
+          photoURL: inputs.photoURL,
+        }).then(() => {
+          navigate("/");
+        });
+      })
+      .catch((err) => {});
   };
 
   return (
@@ -52,7 +54,6 @@ const SignUp = () => {
           display: "flex",
           flexDirection: "column",
           textAlign: "center",
-          backgroundColor: "#ccc",
         }}
       >
         <Typography variant="h4">Sign up</Typography>
@@ -84,8 +85,29 @@ const SignUp = () => {
           value={inputs.password}
           onChange={handleInputs}
         />
-        <Button variant="contained" onClick={handleSignUp}>
+
+        <TextField
+          type="url"
+          label="Url of profile dp"
+          margin="normal"
+          size="small"
+          name="photoURL"
+          value={inputs.photoURL}
+          onChange={handleInputs}
+        />
+        <Button
+          variant="contained"
+          onClick={handleSignUp}
+          color="warning"
+          sx={{
+            my: 1,
+          }}
+        >
           Submit
+        </Button>
+
+        <Button variant="contained" onClick={() => navigate("/login")}>
+          Login
         </Button>
       </Card>
     </Box>

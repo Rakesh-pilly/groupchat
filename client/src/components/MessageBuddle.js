@@ -5,7 +5,6 @@ import dp from "../images/profile.png";
 
 
 const MessageBuddle = ({ isUser, profileImg, userName, message }, ref) => {
-console.log(ref)
 
     const style = {
         

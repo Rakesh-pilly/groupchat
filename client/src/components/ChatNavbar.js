@@ -5,16 +5,17 @@ import OnlineBadge from "./OnlineBadge";
 
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase";
+import { auth, deletUser } from "../firebase";
 import { useSelector } from "react-redux";
 
 const ChatNavbar = () => {
   const navigate = useNavigate();
 const {userName,profileUrl, uuid} = useSelector(state=> state.auth);
 
-console.log(profileUrl)
 
   const handleLogOut = () => {
+
+    deletUser(uuid)
     signOut(auth)
       .then(() => {
         navigate("/login");

@@ -1,75 +1,82 @@
 import React, { useState } from "react";
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/auth";
 const Login = () => {
-
-    const navigate = useNavigate();
-    const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
 
-  const {isLogging} = useSelector(state => state.auth)
+  const { isLogging } = useSelector((state) => state.auth);
 
-  if(isLogging){
-    navigate("/")
+  if (isLogging) {
+    navigate("/");
   }
 
   const handleInputs = (e) => {
-
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = ()=> {
+  const handleSubmit = () => {
     if (inputs.email === "" || inputs.password === "") return;
 
     signInWithEmailAndPassword(auth, inputs.email, inputs.password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-
-      console.log("user", userCredential)
-
-      dispatch(authActions.updateUser({userName : user.displayName, profileUrl: user.photoURL, uuid : user.uid}))
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
 
 
-        navigate("/")
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      
-    });
-    }
+        dispatch(
+          authActions.updateUser({
+            userName: user.displayName,
+            profileUrl: user.photoURL,
+            uuid: user.uid,
+          })
+        );
 
-    const hanleSignIn = ()=>{
-      signInWithPopup(auth, provider)
-  .then((result) => {
+        navigate("/");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
 
+  const hanleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        let user = result.user;
+        dispatch(
+          authActions.updateUser({
+            userName: user.displayName,
+            profileUrl: user.photoURL,
+            uuid: user.uid,
+          })
+        );
 
+        navigate("/");
 
-    let user = result.user;
-    dispatch(authActions.updateUser({userName : user.displayName, profileUrl: user.photoURL, uuid : user.uid}))
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-    navigate("/")
-
-   
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-
-    // ...
-
-  });
-    }
+        // ...
+      });
+  };
 
   return (
     <Box
@@ -110,9 +117,23 @@ const Login = () => {
           name="password"
           onChange={handleInputs}
         />
-        <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+        <Button variant="contained" onClick={handleSubmit}>
+          Submit
+        </Button>
 
-        <Button variant  = "contained" onClick = {hanleSignIn}>Google signin</Button> 
+        <Button variant="contained" onClick={() => navigate("/signup")
+      }
+      color = "warning"  
+        sx ={{
+          my:1
+        }}
+        >
+          Sing up{" "}
+        </Button>
+
+        <Button variant="contained" onClick={hanleSignIn}>
+          Google signin
+        </Button>
       </Card>
     </Box>
   );
