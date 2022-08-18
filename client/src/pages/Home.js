@@ -36,6 +36,7 @@ const Home = () => {
               minHeight: "96vh",
               display: "flex",
               flexDirection: "column"
+              ,width: "100%"
 
             }}
           >

@@ -15,7 +15,7 @@ function App() {
 
   onAuthStateChanged(auth, (user)=> {
     if(user){
-      dispatch(authActions.login())
+      dispatch(authActions.login({userName : user.displayName, profileUrl: user.photoURL, uuid : user.uid}))
 
     }else{
       dispatch(authActions.logout())

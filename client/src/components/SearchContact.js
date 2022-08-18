@@ -24,6 +24,7 @@ const SearchContact = () => {
         sx={{
           backgroundColor: "#222E35",
           border: "0",
+          outline: "none"
         }}
 
         InputProps={{
@@ -33,6 +34,9 @@ const SearchContact = () => {
               </InputAdornment>
             ),
 
+              style: {
+                outline:"none"
+              }
 
             
 

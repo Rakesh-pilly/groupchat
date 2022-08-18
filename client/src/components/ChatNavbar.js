@@ -6,9 +6,13 @@ import OnlineBadge from "./OnlineBadge";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
+import { useSelector } from "react-redux";
 
 const ChatNavbar = () => {
   const navigate = useNavigate();
+const {userName,profileUrl, uuid} = useSelector(state=> state.auth);
+
+console.log(profileUrl)
 
   const handleLogOut = () => {
     signOut(auth)
@@ -30,10 +34,16 @@ const ChatNavbar = () => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           variant="dot"
         >
-          <Avatar alt="Remy Sharp" src={dp} />
+
+          
+          <Avatar alt="Remy Sharp" src={profileUrl ? profileUrl: dp}  />
         </OnlineBadge>
 
-        <Typography variant="h6" sx ={{ml: 1}}>user Name</Typography>
+        <Typography variant="h6" sx ={{ml: 1}}>
+
+    {userName? userName : "user name"}
+
+        </Typography>
       </Box>
       <Button
         variant="contained"

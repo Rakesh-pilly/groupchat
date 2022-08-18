@@ -1,7 +1,8 @@
 
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth,  signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCovmQHJ85cYhRkPJjIZ1cqHK8Q6fHvZDM",
@@ -13,10 +14,19 @@ const firebaseConfig = {
   measurementId: "G-EJTF3M8787"
 };
 
+
+
 const app = initializeApp(firebaseConfig);
-
-
 export const auth = getAuth();
+
+export const provider = new GoogleAuthProvider();
+
+provider.setCustomParameters({
+  'login_hint': 'user@example.com'
+});
+
+
+
 
 
 

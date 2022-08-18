@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button, Card, TextField, Typography } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../store/auth";
 const Login = () => {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -31,6 +33,11 @@ const Login = () => {
       // Signed in 
       const user = userCredential.user;
 
+      console.log("user", userCredential)
+
+      dispatch(authActions.updateUser({userName : user.displayName, profileUrl: user.photoURL, uuid : user.uid}))
+
+
         navigate("/")
       // ...
     })
@@ -39,6 +46,29 @@ const Login = () => {
       const errorMessage = error.message;
       
     });
+    }
+
+    const hanleSignIn = ()=>{
+      signInWithPopup(auth, provider)
+  .then((result) => {
+
+
+
+    let user = result.user;
+    dispatch(authActions.updateUser({userName : user.displayName, profileUrl: user.photoURL, uuid : user.uid}))
+
+    navigate("/")
+
+   
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    // ...
+
+  });
     }
 
   return (
@@ -81,6 +111,8 @@ const Login = () => {
           onChange={handleInputs}
         />
         <Button variant="contained" onClick={handleSubmit}>Submit</Button>
+
+        <Button variant  = "contained" onClick = {hanleSignIn}>Google signin</Button> 
       </Card>
     </Box>
   );
